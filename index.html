@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SERKAN TEACHER · Akıllı Okuma + Test</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body {
+            background: linear-gradient(145deg, #f0f4fa 0%, #e6ecf5 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1.5rem;
+            position: relative;
+        }
+        .site-wrapper {
+            max-width: 1100px;
+            width: 100%;
+            background: rgba(255,255,255,0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 3rem;
+            box-shadow: 0 20px 40px rgba(0,20,50,0.15), 0 8px 20px rgba(0,0,0,0.05);
+            padding: 2.5rem 2.8rem;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+        .hero-title {
+            font-size: 4.2rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #1a2e4d, #2c3e6e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+            margin-bottom: 0.25rem;
+            text-transform: uppercase;
+            text-shadow: 0 4px 12px rgba(30,60,120,0.2);
+        }
+        .auth-bar {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 1.2rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .auth-btn {
+            background: white;
+            border: 1px solid rgba(26,46,77,0.1);
+            padding: 0.7rem 1.8rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 1rem;
+            color: #1a2e4d;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .auth-btn:hover { background: #1a2e4d; color: white; border-color: #1a2e4d; transform: scale(1.02); }
+        .user-greeting {
+            background: rgba(26,46,77,0.07);
+            padding: 0.5rem 1.5rem;
+            border-radius: 40px;
+            font-weight: 500;
+            color: #1a2e4d;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            backdrop-filter: blur(4px);
+        }
+        .logout-btn { background: none; border: none; color: #4a5f7a; cursor: pointer; font-size: 1.2rem; transition: 0.2s; }
+        .logout-btn:hover { color: #c0392b; }
+        .level-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; margin: 0 0 1.5rem 0; gap: 1rem; }
+        .level-selector {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            background: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 40px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.02);
+        }
+        .level-selector label { font-weight: 600; color: #1a2e4d; }
+        #levelSelect { padding: 0.5rem 1rem; border-radius: 30px; border: 2px solid #dbe0e8; font-weight: 500; background: white; cursor: pointer; }
+        .action-buttons { display: flex; gap: 0.8rem; }
+        .icon-btn {
+            background: white;
+            border: 1px solid rgba(255,255,255,0.8);
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            font-size: 1.3rem;
+            color: #1a2e4d;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            transition: 0.2s;
+        }
+        .icon-btn:hover { background: #1a2e4d; color: white; transform: scale(1.05); }
+        .icon-btn.speaking { background: #e67e22; color: white; }
+        .reading-card {
+            background: rgba(255,255,255,0.75);
+            backdrop-filter: blur(4px);
+            border-radius: 2.5rem;
+            padding: 2.5rem 3rem;
+            margin: 1rem 0 1.8rem 0;
+            box-shadow: inset 0 1px 4px rgba(255,255,255,0.8), 0 15px 30px rgba(26,46,77,0.1);
+            border: 1px solid rgba(255,255,255,0.7);
+        }
+        .reading-text { font-size: 1.5rem; line-height: 2.2rem; font-weight: 400; color: #102331; word-spacing: 0.1rem; }
+        .reading-text .word { display: inline-block; cursor: pointer; border-radius: 12px; padding: 0 2px; transition: background 0.15s, box-shadow 0.15s; }
+        .reading-text .word:hover { background: rgba(255, 215, 100, 0.3); box-shadow: 0 0 0 2px rgba(255,200,70,0.3); }
+        .trans-tooltip {
+            position: absolute;
+            background: #1e293b;
+            color: white;
+            padding: 0.7rem 1.4rem;
+            border-radius: 40px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.25);
+            pointer-events: none;
+            z-index: 1000;
+            transition: opacity 0.15s;
+            max-width: 300px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .test-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(6px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.2s;
+        }
+        .test-overlay.active { opacity: 1; visibility: visible; }
+        .test-card {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            width: 90%;
+            max-width: 700px;
+            border-radius: 2.5rem;
+            padding: 2.2rem;
+            box-shadow: 0 40px 70px rgba(0,10,30,0.3);
+            border: 1px solid white;
+        }
+        .test-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.8rem; }
+        .test-header h2 { color: #1a2e4d; font-size: 1.8rem; }
+        .timer { background: #1a2e4d; color: white; padding: 0.6rem 1.4rem; border-radius: 40px; font-weight: 700; font-size: 1.5rem; letter-spacing: 2px; }
+        .question-text { font-size: 1.5rem; font-weight: 600; margin-bottom: 1.8rem; color: #0b1a2c; }
+        .options { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem; }
+        .option-btn {
+            background: white;
+            border: 2px solid #d0d9e6;
+            border-radius: 40px;
+            padding: 1rem 1.2rem;
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #1a2e4d;
+            cursor: pointer;
+            transition: 0.15s;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .option-btn:hover:not(:disabled) { background: #eef2f7; border-color: #1a2e4d; }
+        .option-btn.selected { background: #1a2e4d; color: white; border-color: #1a2e4d; }
+        .option-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        .test-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem; }
+        .test-footer button { background: #1a2e4d; color: white; border: none; padding: 0.8rem 2.2rem; border-radius: 40px; font-weight: 600; font-size: 1.1rem; cursor: pointer; }
+        .test-footer button:disabled { background: #b0c0d0; cursor: not-allowed; }
+        .contact-section {
+            margin-top: 2.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            background: rgba(255,255,255,0.5);
+            border-radius: 3rem;
+            padding: 1.2rem 2.2rem;
+            border: 1px solid white;
+        }
+        .contact-email { display: flex; align-items: center; gap: 1rem; background: white; padding: 0.5rem 1.5rem; border-radius: 40px; box-shadow: 0 4px 8px rgba(0,0,0,0.02); }
+        .contact-email a { text-decoration: none; font-weight: 600; color: #1a2e4d; }
+        .copy-btn { background: none; border: none; color: #4a627a; cursor: pointer; }
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.2s;
+        }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal-card {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            width: 90%;
+            max-width: 420px;
+            border-radius: 2.5rem;
+            padding: 2.5rem 2rem;
+            box-shadow: 0 40px 70px rgba(0,10,30,0.3);
+        }
+        .close-modal { float: right; background: none; border: none; font-size: 2rem; cursor: pointer; }
+        input { width: 100%; padding: 1rem 1.5rem; border: 2px solid #dbe0e8; border-radius: 40px; margin-bottom: 1rem; }
+        .modal-btn { background: #1a2e4d; color: white; width: 100%; padding: 1rem; border-radius: 40px; font-weight: 700; border: none; cursor: pointer; }
+        @media (max-width: 700px) {
+            .site-wrapper { padding: 1.5rem; }
+            .hero-title { font-size: 3rem; }
+            .reading-card { padding: 1.5rem; }
+            .options { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+<div class="site-wrapper">
+    <h1 class="hero-title">SERKAN TEACHER</h1>
+
+    <div class="auth-bar">
+        <div id="authButtons">
+            <button class="auth-btn" id="loginBtn"><i class="fas fa-sign-in-alt"></i> Giriş</button>
+            <button class="auth-btn" id="registerBtn"><i class="fas fa-user-plus"></i> Kayıt Ol</button>
+        </div>
+        <div id="userInfo" style="display: none;" class="user-greeting">
+            <span><i class="fas fa-user-circle"></i> <span id="displayName"></span></span>
+            <button class="logout-btn" id="logoutBtn" title="Çıkış"><i class="fas fa-power-off"></i></button>
+        </div>
+    </div>
+
+    <div class="level-bar">
+        <div class="level-selector">
+            <label><i class="fas fa-layer-group"></i> Seviye:</label>
+            <select id="levelSelect">
+                <option value="A1">A1 (Başlangıç)</option>
+                <option value="A2">A2 (Temel)</option>
+                <option value="B1" selected>B1 (Orta)</option>
+                <option value="B2">B2 (Orta-üstü)</option>
+                <option value="C1">C1 (İleri)</option>
+                <option value="C2">C2 (Uzman)</option>
+            </select>
+        </div>
+        <div class="action-buttons">
+            <button class="icon-btn" id="speakBtn" title="Metni sesli oku"><i class="fas fa-volume-up"></i></button>
+            <button class="icon-btn" id="testBtn" title="Testi başlat"><i class="fas fa-pencil-alt"></i></button>
+        </div>
+    </div>
+
+    <div class="reading-card">
+        <div class="reading-text" id="readingTextContainer"></div>
+    </div>
+
+    <div class="contact-section">
+        <div style="font-weight: 600; color: #1a2e4d;"><i class="fas fa-envelope-open-text"></i> İletişim</div>
+        <div class="contact-email">
+            <i class="fas fa-at"></i>
+            <a href="mailto:serkan.teacher@englishreader.com">serkan.teacher@englishreader.com</a>
+            <button class="copy-btn" onclick="copyEmail()" title="Kopyala"><i class="far fa-copy"></i></button>
+        </div>
+        <div><i class="fas fa-headset"></i> 7/24 destek</div>
+    </div>
+</div>
+
+<div id="translationTooltip" class="trans-tooltip" style="opacity:0; display: none;"><i class="fas fa-language"></i> <span id="translationText">...</span></div>
+
+<div id="testOverlay" class="test-overlay">
+    <div class="test-card">
+        <div class="test-header">
+            <h2 id="testLevelTitle">B1 Seviye Test</h2>
+            <div class="timer" id="timerDisplay">20s</div>
+        </div>
+        <div id="questionArea">
+            <div class="question-text" id="questionText">Soru yükleniyor...</div>
+            <div class="options" id="optionsContainer"></div>
+        </div>
+        <div class="test-footer">
+            <span id="questionCounter">1 / 5</span>
+            <button id="nextQuestionBtn" disabled>Sonraki →</button>
+        </div>
+    </div>
+</div>
+
+<div id="loginModal" class="modal-overlay"><div class="modal-card">...</div></div>
+<div id="registerModal" class="modal-overlay"><div class="modal-card">...</div></div>
+
+<script>
+(function() {
+    const API_URL = 'https://api.mymemory.translated.net/get';
+    const readingDiv = document.getElementById('readingTextContainer');
+    const tooltip = document.getElementById('translationTooltip');
+    const translationSpan = document.getElementById('translationText');
+    let currentUser = null;
+
+    const texts = {
+        A1: "Hello! My name is Tom. I am from England. I live in London. London is a big city. I have a dog and a cat. My dog is black. My cat is white. I like to read books. Books are fun.",
+        A2: "Yesterday, I went to the cinema with my friends. We watched a comedy movie. It was very funny. After the movie, we ate pizza at a restaurant. The pizza was delicious. I had a great time.",
+        B1: "Environmental pollution is one of the biggest problems in the world. Factories and cars produce harmful gases. These gases cause global warming. People should recycle more and use public transport. Governments must take action to protect nature.",
+        B2: "The rapid development of artificial intelligence raises ethical questions. Some experts believe that AI could replace many jobs, while others argue it will create new opportunities. It is crucial to establish regulations that ensure AI is used responsibly and for the benefit of humanity.",
+        C1: "Despite significant advancements in medical technology, access to healthcare remains unequal across the globe. Socioeconomic factors often determine the quality of treatment an individual receives. Addressing this disparity requires not only political will but also a fundamental restructuring of healthcare systems to prioritize equity.",
+        C2: "The phenomenological approach to consciousness, as articulated by philosophers like Husserl, posits that subjective experience is the foundational ground of all knowledge. This perspective challenges the purely materialistic paradigms that dominate contemporary neuroscience, suggesting that a comprehensive understanding of mind must integrate first-person accounts with empirical observation."
+    };
+
+    const questionsDB = {
+        A1: [
+            { question: "Where is Tom from?", options: ["USA", "England", "Canada", "Australia"], correct: 1 },
+            { question: "What color is Tom's dog?", options: ["White", "Black", "Brown", "Grey"], correct: 1 },
+            { question: "What does Tom like to do?", options: ["Play football", "Read books", "Watch TV", "Swim"], correct: 1 },
+            { question: "Where does Tom live?", options: ["Paris", "London", "Berlin", "Madrid"], correct: 1 },
+            { question: "How many pets does Tom have?", options: ["One", "Two", "Three", "Four"], correct: 1 }
+        ],
+        A2: [
+            { question: "What did the author do yesterday?", options: ["Went to a party", "Went to cinema", "Went shopping", "Stayed home"], correct: 1 },
+            { question: "What type of movie was it?", options: ["Drama", "Comedy", "Horror", "Action"], correct: 1 },
+            { question: "What did they eat after the movie?", options: ["Burger", "Pizza", "Pasta", "Salad"], correct: 1 },
+            { question: "How was the pizza?", options: ["Terrible", "Delicious", "Cold", "Expensive"], correct: 1 },
+            { question: "Did the author have a good time?", options: ["Yes", "No", "Not sure", "Boring"], correct: 0 }
+        ],
+        B1: [
+            { question: "What is one of the biggest problems?", options: ["Poverty", "Pollution", "War", "Disease"], correct: 1 },
+            { question: "What produces harmful gases?", options: ["Schools", "Factories and cars", "Hospitals", "Farms"], correct: 1 },
+            { question: "What do these gases cause?", options: ["Rain", "Global warming", "Wind", "Snow"], correct: 1 },
+            { question: "What should people do more?", options: ["Drive", "Recycle", "Waste", "Burn"], correct: 1 },
+            { question: "Who must take action?", options: ["Individuals only", "Governments", "Children", "Teachers"], correct: 1 }
+        ],
+        B2: [
+            { question: "What raises ethical questions?", options: ["AI development", "Space travel", "Genetic engineering", "Internet"], correct: 0 },
+            { question: "What do some experts believe?", options: ["AI will solve all problems", "AI could replace jobs", "AI is a myth", "AI is evil"], correct: 1 },
+            { question: "What is crucial to establish?", options: ["New laws", "Regulations", "Taxes", "Schools"], correct: 1 },
+            { question: "AI should be used for?", options: ["Profit", "Benefit of humanity", "War", "Entertainment"], correct: 1 },
+            { question: "Others argue AI will...", options: ["Destroy world", "Create opportunities", "Be useless", "Cost money"], correct: 1 }
+        ],
+        C1: [
+            { question: "What remains unequal?", options: ["Education", "Access to healthcare", "Food", "Housing"], correct: 1 },
+            { question: "What often determines treatment quality?", options: ["Age", "Socioeconomic factors", "Gender", "Luck"], correct: 1 },
+            { question: "What is required to address disparity?", options: ["Money only", "Political will and restructuring", "New drugs", "Doctors"], correct: 1 },
+            { question: "What should be prioritized?", options: ["Equity", "Profit", "Speed", "Technology"], correct: 0 },
+            { question: "According to the text, what is unequal across the globe?", options: ["Technology", "Healthcare access", "Education", "Internet"], correct: 1 }
+        ],
+        C2: [
+            { question: "Which philosopher is mentioned?", options: ["Kant", "Husserl", "Nietzsche", "Sartre"], correct: 1 },
+            { question: "What does the phenomenological approach emphasize?", options: ["Objective data", "Subjective experience", "Brain scans", "Behavior"], correct: 1 },
+            { question: "What does it challenge?", options: ["Religious views", "Materialistic paradigms", "Dualism", "Idealism"], correct: 1 },
+            { question: "What must integrate first-person accounts?", options: ["Understanding of mind", "Physics", "Chemistry", "Biology"], correct: 0 },
+            { question: "What is the foundational ground of knowledge?", options: ["Empirical observation", "Subjective experience", "Logic", "Experiments"], correct: 1 }
+        ]
+    };
+
+    const levelSelect = document.getElementById('levelSelect');
+    function updateTextByLevel() {
+        const level = levelSelect.value;
+        readingDiv.innerHTML = wrapWords(texts[level] || texts.B1);
+    }
+    function wrapWords(text) {
+        return text.split(/(\s+)/).map(seg => seg.trim().length ? `<span class="word">${seg}</span>` : seg).join('');
+    }
+    levelSelect.addEventListener('change', updateTextByLevel);
+    updateTextByLevel();
+
+    async function fetchTranslation(word) {
+        const clean = word.replace(/[^\w']+/g, '').trim();
+        if (!clean) return null;
+        try {
+            const res = await fetch(`${API_URL}?q=${encodeURIComponent(clean)}&langpair=en|tr`);
+            const data = await res.json();
+            return data.responseData?.translatedText || '(çeviri yok)';
+        } catch {
+            const fallback = { hello:'merhaba', name:'isim', from:'den', england:'ingiltere', live:'yaşamak', london:'londra', big:'büyük', city:'şehir', dog:'köpek', cat:'kedi', black:'siyah', white:'beyaz', read:'okumak', books:'kitaplar', fun:'eğlenceli' };
+            return fallback[clean.toLowerCase()] || `[${clean}]?`;
+        }
+    }
+
+    readingDiv.addEventListener('click', async (e) => {
+        const wordSpan = e.target.closest('.word');
+        if (!wordSpan) return;
+        const word = wordSpan.innerText.trim();
+        const rect = wordSpan.getBoundingClientRect();
+        tooltip.style.display = 'flex';
+        tooltip.style.opacity = '1';
+        translationSpan.innerText = 'Çevriliyor...';
+        tooltip.style.top = `${rect.bottom + window.scrollY + 8}px`;
+        tooltip.style.left = `${rect.left + window.scrollX - 10}px`;
+        const translation = await fetchTranslation(word);
+        translationSpan.innerText = translation;
+        setTimeout(() => {
+            tooltip.style.opacity = '0';
+            setTimeout(() => tooltip.style.display = 'none', 200);
+        }, 2800);
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.word')) {
+            tooltip.style.opacity = '0';
+            setTimeout(() => tooltip.style.display = 'none', 150);
+        }
+    });
+
+    const speakBtn = document.getElementById('speakBtn');
+    let speaking = false;
+    speakBtn.addEventListener('click', () => {
+        const utterance = new SpeechSynthesisUtterance(readingDiv.innerText);
+        utterance.lang = 'en-US';
+        utterance.rate = 0.9;
+        utterance.onstart = () => { speakBtn.classList.add('speaking'); speaking = true; };
+        utterance.onend = () => { speakBtn.classList.remove('speaking'); speaking = false; };
+        utterance.onerror = () => { speakBtn.classList.remove('speaking'); speaking = false; };
+        if (speaking) {
+            window.speechSynthesis.cancel();
+            speakBtn.classList.remove('speaking');
+            speaking = false;
+        } else {
+            window.speechSynthesis.cancel();
+            window.speechSynthesis.speak(utterance);
+        }
+    });
+
+    const testOverlay = document.getElementById('testOverlay');
+    const testBtn = document.getElementById('testBtn');
+    const questionText = document.getElementById('questionText');
+    const optionsContainer = document.getElementById('optionsContainer');
+    const timerDisplay = document.getElementById('timerDisplay');
+    const questionCounter = document.getElementById('questionCounter');
+    const nextBtn = document.getElementById('nextQuestionBtn');
+    const testLevelTitle = document.getElementById('testLevelTitle');
+
+    let currentLevel = 'B1';
+    let currentQuestions = [];
+    let currentQIndex = 0;
+    let timerInterval = null;
+    let timeLeft = 20;
+    let answers = [];
+    let testActive = false;
+
+    function loadQuestionsForLevel(level) {
+        return questionsDB[level] || questionsDB.B1;
+    }
+
+    function startTest() {
+        currentLevel = levelSelect.value;
+        testLevelTitle.innerText = `${currentLevel} Seviye Test`;
+        currentQuestions = loadQuestionsForLevel(currentLevel).map(q => ({ ...q }));
+        currentQIndex = 0;
+        answers = new Array(currentQuestions.length).fill(null);
+        testActive = true;
+        showQuestion(0);
+        testOverlay.classList.add('active');
+    }
+
+    function showQuestion(index) {
+        if (!testActive) return;
+        if (index >= currentQuestions.length) {
+            const correctCount = answers.reduce((acc, ans, i) => acc + (ans === currentQuestions[i].correct ? 1 : 0), 0);
+            alert(`Test tamamlandı! Doğru sayısı: ${correctCount}/${currentQuestions.length}`);
+            closeTest();
+            return;
+        }
+
+        const q = currentQuestions[index];
+        questionText.innerText = q.question;
+        optionsContainer.innerHTML = '';
+
+        q.options.forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerHTML = `<span>${String.fromCharCode(65 + idx)}</span> ${opt}`;
+            btn.setAttribute('data-opt-index', String(idx));
+            btn.onclick = () => selectOption(idx);
+            if (answers[index] !== null && idx === answers[index]) btn.classList.add('selected');
+            optionsContainer.appendChild(btn);
+        });
+
+        questionCounter.innerText = `${index + 1} / ${currentQuestions.length}`;
+        timeLeft = 20;
+        timerDisplay.innerText = `${timeLeft}s`;
+        if (timerInterval) clearInterval(timerInterval);
+        timerInterval = setInterval(() => {
+            timeLeft -= 1;
+            timerDisplay.innerText = `${timeLeft}s`;
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                if (answers[currentQIndex] === null) answers[currentQIndex] = -1;
+                enableNextButton();
+            }
+        }, 1000);
+
+        if (answers[index] !== null) {
+            clearInterval(timerInterval);
+            timerDisplay.innerText = '0s';
+            enableNextButton();
+        } else {
+            nextBtn.disabled = true;
+        }
+    }
+
+    function selectOption(optIndex) {
+        if (answers[currentQIndex] !== null) return;
+        answers[currentQIndex] = optIndex;
+        document.querySelectorAll('.option-btn').forEach(btn => {
+            btn.classList.remove('selected');
+            if (btn.getAttribute('data-opt-index') === String(optIndex)) btn.classList.add('selected');
+        });
+        clearInterval(timerInterval);
+        timerDisplay.innerText = '0s';
+        enableNextButton();
+    }
+
+    function enableNextButton() { nextBtn.disabled = false; }
+
+    function nextQuestion() {
+        if (nextBtn.disabled) return;
+        clearInterval(timerInterval);
+        currentQIndex += 1;
+        showQuestion(currentQIndex);
+    }
+
+    function closeTest() {
+        testOverlay.classList.remove('active');
+        if (timerInterval) clearInterval(timerInterval);
+        testActive = false;
+    }
+
+    nextBtn.addEventListener('click', nextQuestion);
+    testBtn.addEventListener('click', startTest);
+    testOverlay.addEventListener('click', (e) => { if (e.target === testOverlay) closeTest(); });
+
+    const loginModal = document.getElementById('loginModal');
+    const registerModal = document.getElementById('registerModal');
+    const authButtons = document.getElementById('authButtons');
+    const userInfoDiv = document.getElementById('userInfo');
+    const displayNameSpan = document.getElementById('displayName');
+
+    function loadUser() {
+        const stored = localStorage.getItem('serkan_current_user');
+        if (stored) { currentUser = stored; showUserUI(stored); }
+        else { currentUser = null; showAuthUI(); }
+    }
+    function showUserUI(u) { authButtons.style.display = 'none'; userInfoDiv.style.display = 'flex'; displayNameSpan.innerText = u; }
+    function showAuthUI() { authButtons.style.display = 'flex'; userInfoDiv.style.display = 'none'; }
+
+    document.getElementById('loginBtn').addEventListener('click', () => loginModal.classList.add('active'));
+    document.getElementById('registerBtn').addEventListener('click', () => registerModal.classList.add('active'));
+    window.closeAllModals = () => { loginModal.classList.remove('active'); registerModal.classList.remove('active'); };
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+        localStorage.removeItem('serkan_current_user');
+        loadUser();
+    });
+
+    loadUser();
+
+    window.copyEmail = function() {
+        navigator.clipboard.writeText('serkan.teacher@englishreader.com').then(() => alert('E-posta kopyalandı!'));
+    };
+
+    loginModal.innerHTML = `<div class="modal-card"><button class="close-modal" onclick="closeAllModals()">&times;</button><h2>Giriş</h2><input id="loginUsername" placeholder="Kullanıcı adı"><input id="loginPassword" type="password" placeholder="Şifre"><button class="modal-btn" id="loginSubmit">Giriş Yap</button></div>`;
+    registerModal.innerHTML = `<div class="modal-card"><button class="close-modal" onclick="closeAllModals()">&times;</button><h2>Kayıt</h2><input placeholder="Kullanıcı adı"><input type="password" placeholder="Şifre"><button class="modal-btn">Kaydol</button></div>`;
+
+    document.getElementById('loginSubmit').addEventListener('click', () => {
+        localStorage.setItem('serkan_current_user', document.getElementById('loginUsername').value || 'Serkan');
+        loadUser();
+        closeAllModals();
+    });
+})();
+</script>
+</body>
+</html>
